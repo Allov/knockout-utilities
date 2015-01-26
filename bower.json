@@ -1,0 +1,16 @@
+{
+  "name": "rc.knockout.utilities",
+  "version": "0.1.0",
+  "homepage": "https://github.com/Allov/rc.knockout.utilities",
+  "authors": [
+    "Allov"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
