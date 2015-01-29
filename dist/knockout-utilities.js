@@ -2,11 +2,11 @@ define(["knockout"],
     function(ko) {
         'use strict';
 
-        var utilities = {};
+        function KnockoutUtilities (){}
 
         //TODO: Ne pas utiliser cette méthode - trop lourde...
         //mieux connaitre/identifier les observables des viewmodels
-        utilities.toJS = function(obj) {
+        KnockoutUtilities.prototype.toJS = function(obj) {
             //if (utilities.isNullOrUndefined(obj))
             //    return obj;
 
@@ -52,7 +52,7 @@ define(["knockout"],
             //return newObg;
         };
 
-        utilities.removeKoMappingProperties = function(obj) {
+        KnockoutUtilities.prototype.removeKoMappingProperties = function(obj) {
             for (var property in obj) {
                 if (obj.hasOwnProperty(property)) {
                     if (property == '__ko_mapping__') {
@@ -68,5 +68,79 @@ define(["knockout"],
             }
         };
 
-        return utilities;
+        //todo: remove when this https://github.com/knockout/knockout/issues/1475
+        KnockoutUtilities.prototype.koBindingDone = function(element, childElementCount, attempts) {
+            var dfd = $.Deferred();
+
+            if (!attempts) {
+                attempts = 400; //default
+            }
+
+            koBindingDoneTest(1, element, dfd, childElementCount, attempts);
+
+            return dfd.promise();
+        };
+
+        KnockoutUtilities.prototype.registerComponent = function(name, componentConfig) {
+            if (!name) {
+                throw new Error('Framework.registerComponent - Argument missing exception: name');
+            }
+
+            if (ko.components.isRegistered(name)) {
+                throw new Error('Framework.registerComponent - Already registered component: ' + name);
+            }
+
+            var basePath = componentConfig.basePath || 'components/';
+
+            if (componentConfig.isBower) {
+                if (!componentConfig.type) {
+                    componentConfig.type = "component";
+                }
+
+                basePath = "bower_components/rc." + componentConfig.type + "." + name + "/dist/";
+            }
+
+            var requirePath = basePath + name + '/' + name;
+
+            if (componentConfig.htmlOnly) {
+                requirePath = 'text!' + requirePath + '.html';
+            }
+
+            var koComponentConfig = {
+                require: requirePath
+            };
+
+            if (componentConfig.htmlOnly) {
+                koComponentConfig = {
+                    template: koComponentConfig
+                };
+            }
+
+            ko.components.register(name, koComponentConfig);
+        };
+
+        function koBindingDoneTest(attempt, element, dfd, childElementCount, attempts) {
+            if (attempt >= attempts) {
+                dfd.reject('koBindingDone timeout after ' + attempts + ' attempts.');
+                return;
+            }
+
+            // console.info('attempt', attempt, element.childElementCount);
+            var bindingDone = element.childElementCount > 0;
+
+            if (childElementCount) {
+                bindingDone = element.childElementCount === childElementCount;
+            }
+
+            if (bindingDone) {
+                dfd.resolve(element);
+                return;
+            }
+
+            setTimeout(function() {
+                koBindingDoneTest(attempt + 1, element, dfd, childElementCount, attempts);
+            }, 1);
+        }
+
+        return new  KnockoutUtilities();
     });
