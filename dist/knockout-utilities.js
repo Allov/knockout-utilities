@@ -82,6 +82,8 @@ define(["knockout"],
         };
 
         KnockoutUtilities.prototype.registerComponent = function(name, componentConfig) {
+            componentConfig = componentConfig || {};
+
             if (!name) {
                 throw new Error('Framework.registerComponent - Argument missing exception: name');
             }
