@@ -18,7 +18,7 @@ define(["knockout"],
 
             var result = ko.toJS(obj);
 
-            utilities.removeKoMappingProperties(result);
+            this.removeKoMappingProperties(result);
 
             return result;
 
@@ -61,7 +61,7 @@ define(["knockout"],
                         var type = typeof obj[property];
 
                         if (type === 'object' || type === 'function') {
-                            utilities.removeKoMappingProperties(obj[property]);
+                            this.removeKoMappingProperties(obj[property]);
                         }
                     }
                 }
@@ -85,11 +85,11 @@ define(["knockout"],
             componentConfig = componentConfig || {};
 
             if (!name) {
-                throw new Error('Framework.registerComponent - Argument missing exception: name');
+                throw new Error('KnockoutUtilities.registerComponent - Argument missing exception: name');
             }
 
             if (ko.components.isRegistered(name)) {
-                throw new Error('Framework.registerComponent - Already registered component: ' + name);
+                throw new Error('KnockoutUtilities.registerComponent - Already registered component: ' + name);
             }
 
             var basePath = componentConfig.basePath || 'components/';
