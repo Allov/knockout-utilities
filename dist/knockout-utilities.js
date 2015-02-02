@@ -69,14 +69,14 @@ define(["knockout"],
         };
 
         //todo: remove when this https://github.com/knockout/knockout/issues/1475
-        KnockoutUtilities.prototype.koBindingDone = function(element, childElementCount, attempts) {
+        KnockoutUtilities.prototype.koBindingDone = function(element, childElementCount, attempts, includeComments) {
             var dfd = $.Deferred();
 
             if (!attempts) {
                 attempts = 400; //default
             }
 
-            koBindingDoneTest(1, element, dfd, childElementCount, attempts);
+            koBindingDoneTest(1, element, dfd, childElementCount, attempts, includeComments);
 
             return dfd.promise();
         };
@@ -121,17 +121,22 @@ define(["knockout"],
             ko.components.register(name, koComponentConfig);
         };
 
-        function koBindingDoneTest(attempt, element, dfd, childElementCount, attempts) {
+        function koBindingDoneTest(attempt, element, dfd, childElementCount, attempts, includeComments) {
             if (attempt >= attempts) {
                 dfd.reject('koBindingDone timeout after ' + attempts + ' attempts.');
                 return;
             }
 
             // console.info('attempt', attempt, element.childElementCount);
-            var bindingDone = element.childElementCount > 0;
+
+            var bindingDone = includeComments 
+                ? element.get(0).childNodes.length > 0
+                : element.childElementCount > 0;
 
             if (childElementCount) {
-                bindingDone = element.childElementCount === childElementCount;
+                bindingDone = includeComments
+                    ? element.get(0).childNodes.length === childElementCount
+                    : element.childElementCount === childElementCount;
             }
 
             if (bindingDone) {
@@ -140,7 +145,7 @@ define(["knockout"],
             }
 
             setTimeout(function() {
-                koBindingDoneTest(attempt + 1, element, dfd, childElementCount, attempts);
+                koBindingDoneTest(attempt + 1, element, dfd, childElementCount, attempts, includeComments);
             }, 1);
         }
 
