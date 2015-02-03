@@ -119,6 +119,8 @@ define(["knockout"],
             }
 
             ko.components.register(name, koComponentConfig);
+
+            return koComponentConfig;
         };
 
         function koBindingDoneTest(attempt, element, dfd, childElementCount, attempts) {
