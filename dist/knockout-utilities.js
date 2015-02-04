@@ -102,7 +102,7 @@ define(["knockout"],
                 basePath = "bower_components/rc." + componentConfig.type + "." + name + "/dist/";
             }
 
-            var requirePath = basePath + name + '/components/' + name;
+            var requirePath = basePath + name + '/components/' + name + '/' + name;
 
             if (componentConfig.htmlOnly) {
                 requirePath = 'text!' + requirePath + '.html';
