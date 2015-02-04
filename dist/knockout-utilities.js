@@ -1,4 +1,4 @@
-define(["knockout"],
+define(['knockout'],
     function(ko) {
         'use strict';
 
@@ -11,7 +11,7 @@ define(["knockout"],
             //    return obj;
 
             //var mapping = {
-            //    'ignore': ["__ko_mapping__"]
+            //    'ignore': ['__ko_mapping__']
             //};
 
             //var result = ko.toJS(obj, mapping);
@@ -92,17 +92,17 @@ define(["knockout"],
                 throw new Error('KnockoutUtilities.registerComponent - Already registered component: ' + name);
             }
 
-            var basePath = componentConfig.basePath || 'components/';
+            var basePath = componentConfig.basePath || 'components/' + name + '/components/' + name;
 
             if (componentConfig.isBower) {
                 if (!componentConfig.type) {
-                    componentConfig.type = "component";
+                    componentConfig.type = 'component';
                 }
 
-                basePath = "bower_components/rc." + componentConfig.type + "." + name + "/dist/";
+                basePath = 'bower_components/rc.' + componentConfig.type + '.' + name + '/dist/components/' + name;
             }
 
-            var requirePath = basePath + name + '/components/' + name + '/' + name;
+            var requirePath = basePath + '/' + name;
 
             if (componentConfig.htmlOnly) {
                 requirePath = 'text!' + requirePath + '.html';
