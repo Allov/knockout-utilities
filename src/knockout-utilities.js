@@ -61,7 +61,7 @@ define(['knockout'],
             }
 
             if (componentConfig.isBower) {
-                basePath = 'bower_components/rc.' + componentConfig.type + '.' + name + '/dist';
+                basePath = 'bower_components/rc.' + componentConfig.type + '.' + name + '/src';
             }
 
             var requirePath = basePath + '/' + name;
