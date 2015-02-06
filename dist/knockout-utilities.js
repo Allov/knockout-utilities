@@ -2,54 +2,16 @@ define(['knockout'],
     function(ko) {
         'use strict';
 
-        function KnockoutUtilities (){}
+        function KnockoutUtilities() {}
 
         //TODO: Ne pas utiliser cette méthode - trop lourde...
         //mieux connaitre/identifier les observables des viewmodels
         KnockoutUtilities.prototype.toJS = function(obj) {
-            //if (utilities.isNullOrUndefined(obj))
-            //    return obj;
-
-            //var mapping = {
-            //    'ignore': ['__ko_mapping__']
-            //};
-
-            //var result = ko.toJS(obj, mapping);
-
             var result = ko.toJS(obj);
 
             this.removeKoMappingProperties(result);
 
             return result;
-
-            ////var newObg = utilities.deepCopy(obj);
-
-            //if (ko.isObservable(obj)) {
-            //    obj = ko.utils.unwrapObservable(obj);
-            //}
-
-            //var newObg = null;
-
-            //if (obj) {
-            //    if (obj.hasOwnProperty('__ko_mapping__')) {
-            //        newObg = ko.mapping.toJS(obj, { include: ['$type'] });
-            //    } else {
-            //        newObg = ko.toJS(obj);
-            //    }
-
-            //    for (var property in newObg) {
-            //        if (newObg.hasOwnProperty(property)) {
-            //            var type = typeof newObg[property];
-
-            //            if (type  === 'object' || type === 'function')
-            //            {
-            //                newObg[property] = utilities.toJS(newObg[property]);
-            //            }
-            //        }
-            //    }
-            //}
-
-            //return newObg;
         };
 
         KnockoutUtilities.prototype.removeKoMappingProperties = function(obj) {
@@ -92,20 +54,22 @@ define(['knockout'],
                 throw new Error('KnockoutUtilities.registerComponent - Already registered component: ' + name);
             }
 
-            var basePath = componentConfig.basePath || 'components/' + name + '/components/' + name;
+            var basePath = componentConfig.basePath || 'components/' + name;
+
+            if (!componentConfig.type) {
+                componentConfig.type = 'component';
+            }
 
             if (componentConfig.isBower) {
-                if (!componentConfig.type) {
-                    componentConfig.type = 'component';
-                }
-
-                basePath = 'bower_components/rc.' + componentConfig.type + '.' + name + '/dist/components/' + name;
+                basePath = 'bower_components/rc.' + componentConfig.type + '.' + name + '/dist';
             }
 
             var requirePath = basePath + '/' + name;
 
             if (componentConfig.htmlOnly) {
                 requirePath = 'text!' + requirePath + '.html';
+            } else {
+                requirePath = requirePath + '-ui';
             }
 
             var koComponentConfig = {
@@ -131,14 +95,10 @@ define(['knockout'],
 
             // console.info('attempt', attempt, element.childElementCount);
 
-            var bindingDone = includeComments 
-                ? element.get(0).childNodes.length > 0
-                : element.childElementCount > 0;
+            var bindingDone = includeComments ? element.get(0).childNodes.length > 0 : element.childElementCount > 0;
 
             if (childElementCount) {
-                bindingDone = includeComments
-                    ? element.get(0).childNodes.length === childElementCount
-                    : element.childElementCount === childElementCount;
+                bindingDone = includeComments ? element.get(0).childNodes.length === childElementCount : element.childElementCount === childElementCount;
             }
 
             if (bindingDone) {
@@ -151,5 +111,5 @@ define(['knockout'],
             }, 1);
         }
 
-        return new  KnockoutUtilities();
+        return new KnockoutUtilities();
     });
