@@ -4,7 +4,9 @@ A sets of helpers for knockout. Mainly used with the [`generator-koco`](https://
 
 ## Installation
 
-    bower install knockout-utilities
+```bash
+bower install knockout-utilities
+```
     
 ## Knockout component registration
 
