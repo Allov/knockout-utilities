@@ -32,15 +32,17 @@ define(['knockout'],
 
         //todo: remove when this https://github.com/knockout/knockout/issues/1475
         KnockoutUtilities.prototype.koBindingDone = function(element, childElementCount, attempts, includeComments) {
-            var dfd = $.Deferred();
+            return new $.Deferred(function(dfd) {
+                try {
+                    if (!attempts) {
+                        attempts = 400; //default
+                    }
 
-            if (!attempts) {
-                attempts = 400; //default
-            }
-
-            koBindingDoneTest(1, element, dfd, childElementCount, attempts, includeComments);
-
-            return dfd.promise();
+                    koBindingDoneTest(1, element, dfd, childElementCount, attempts, includeComments);
+                } catch (err) {
+                    dfd.rject(err);
+                }
+            }).promise();
         };
 
         KnockoutUtilities.prototype.registerComponent = function(name, componentConfig) {
@@ -61,7 +63,7 @@ define(['knockout'],
             }
 
             if (componentConfig.isBower) {
-                basePath = 'bower_components/' +  name + '/src';
+                basePath = 'bower_components/' + name + '/src';
             }
 
             var requirePath = basePath + '/' + name;
