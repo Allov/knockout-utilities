@@ -4,32 +4,6 @@ define(['knockout'],
 
         function KnockoutUtilities() {}
 
-        //TODO: Ne pas utiliser cette méthode - trop lourde...
-        //mieux connaitre/identifier les observables des viewmodels
-        KnockoutUtilities.prototype.toJS = function(obj) {
-            var result = ko.toJS(obj);
-
-            this.removeKoMappingProperties(result);
-
-            return result;
-        };
-
-        KnockoutUtilities.prototype.removeKoMappingProperties = function(obj) {
-            for (var property in obj) {
-                if (obj.hasOwnProperty(property)) {
-                    if (property == '__ko_mapping__') {
-                        delete obj[property];
-                    } else {
-                        var type = typeof obj[property];
-
-                        if (type === 'object' || type === 'function') {
-                            this.removeKoMappingProperties(obj[property]);
-                        }
-                    }
-                }
-            }
-        };
-
         //todo: remove when this https://github.com/knockout/knockout/issues/1475
         KnockoutUtilities.prototype.koBindingDone = function(element, childElementCount, attempts, includeComments) {
             return new $.Deferred(function(dfd) {
