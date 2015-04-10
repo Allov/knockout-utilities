@@ -1,8 +1,32 @@
+// Copyright (c) CBC/Radio-Canada. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
 define(['knockout'],
     function(ko) {
         'use strict';
 
         function KnockoutUtilities() {}
+
+        KnockoutUtilities.prototype.mapAsObservableValueObjects = function(mapping, complexAttributeNames) {
+            var self = this;
+            for (var i = 0; i < complexAttributeNames.length; i++) {
+                self.mapAsObservableValueObject(mapping, complexAttributeNames[i]);
+            }
+        };
+
+        KnockoutUtilities.prototype.mapAsObservableValueObject = function(mapping, complexAttributeName) {
+            mapping[complexAttributeName] = {
+                update: asObservableValueObject
+            };
+        };
+
+        function asObservableValueObject(options) {
+            if (!options.data) {
+                return null;
+            }
+
+            return ko.observable(options.data);
+        }
 
         //TODO: Ne pas utiliser cette méthode - trop lourde...
         //mieux connaitre/identifier les observables des viewmodels
