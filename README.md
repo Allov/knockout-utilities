@@ -1,6 +1,6 @@
 # Knockout Utilities
 
-A sets of helpers for knockout. Mainly used with the [`generator-koco`](https://github.com/Allov/generator-koco) project.
+A sets of helpers for knockout. Mainly used with the [`generator-koco`](https://github.com/cbcrc/generator-koco) project.
 
 ## Installation
 
