@@ -5,32 +5,19 @@ define(['knockout', 'jquery'],
     function(ko, $) {
         'use strict';
 
-        function KnockoutUtilities() {}
+        function KocoUtilities() {}
 
-        //todo: remove when this https://github.com/knockout/knockout/issues/1475
-        KnockoutUtilities.prototype.koBindingDone = function(element, childElementCount, attempts, includeComments) {
-            return new $.Deferred(function(dfd) {
-                try {
-                    if (!attempts) {
-                        attempts = 400; //default
-                    }
+        
 
-                    koBindingDoneTest(1, element, dfd, childElementCount, attempts, includeComments);
-                } catch (err) {
-                    dfd.rject(err);
-                }
-            }).promise();
-        };
-
-        KnockoutUtilities.prototype.registerComponent = function(name, componentConfig) {
+        KocoUtilities.prototype.registerComponent = function(name, componentConfig) {
             componentConfig = componentConfig || {};
 
             if (!name) {
-                throw new Error('KnockoutUtilities.registerComponent - Argument missing exception: name');
+                throw new Error('KocoUtilities.registerComponent - Argument missing exception: name');
             }
 
             if (ko.components.isRegistered(name)) {
-                throw new Error('KnockoutUtilities.registerComponent - Already registered component: ' + name);
+                throw new Error('KocoUtilities.registerComponent - Already registered component: ' + name);
             }
 
             var basePath = componentConfig.basePath || 'components/' + name;
@@ -66,6 +53,22 @@ define(['knockout', 'jquery'],
             return koComponentConfig;
         };
 
+        //todo: remove when this https://github.com/knockout/knockout/issues/1475
+        KocoUtilities.prototype.koBindingDone = function(element, childElementCount, attempts, includeComments) {
+            return new $.Deferred(function(dfd) {
+                try {
+                    if (!attempts) {
+                        attempts = 400; //default
+                    }
+
+                    koBindingDoneTest(1, element, dfd, childElementCount, attempts, includeComments);
+                } catch (err) {
+                    dfd.rject(err);
+                }
+            }).promise();
+        };
+
+        //todo: remove when this https://github.com/knockout/knockout/issues/1475
         function koBindingDoneTest(attempt, element, dfd, childElementCount, attempts, includeComments) {
             if (attempt >= attempts) {
                 dfd.reject('koBindingDone timeout after ' + attempts + ' attempts.');
@@ -90,5 +93,5 @@ define(['knockout', 'jquery'],
             }, 1);
         }
 
-        return new KnockoutUtilities();
+        return new KocoUtilities();
     });

@@ -1,7 +1,7 @@
 {
-  "name": "knockout-utilities",
-  "version": "0.2.0",
-  "homepage": "https://github.com/cbcrc/knockout-utilities",
+  "name": "koco-knockout-utilities",
+  "version": "0.3.0",
+  "homepage": "https://github.com/cbcrc/koco-knockout-utilities",
   "authors": [
     "Frédérik Charest & Maxime Séguin"
   ],
