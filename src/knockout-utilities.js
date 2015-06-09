@@ -63,7 +63,7 @@ define(['knockout', 'jquery'],
 
                     koBindingDoneTest(1, element, dfd, childElementCount, attempts, includeComments);
                 } catch (err) {
-                    dfd.rject(err);
+                    dfd.reject(err);
                 }
             }).promise();
         };
