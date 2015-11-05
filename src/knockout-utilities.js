@@ -7,52 +7,6 @@ define(['knockout', 'jquery'],
 
         function KocoUtilities() {}
 
-        
-
-        KocoUtilities.prototype.registerComponent = function(name, componentConfig) {
-            componentConfig = componentConfig || {};
-
-            if (!name) {
-                throw new Error('KocoUtilities.registerComponent - Argument missing exception: name');
-            }
-
-            if (ko.components.isRegistered(name)) {
-                throw new Error('KocoUtilities.registerComponent - Already registered component: ' + name);
-            }
-
-            var basePath = componentConfig.basePath || 'components/' + name;
-
-            if (!componentConfig.type) {
-                componentConfig.type = 'component';
-            }
-
-            if (componentConfig.isBower) {
-                basePath = 'bower_components/' + name + '/src';
-            }
-
-            var requirePath = basePath + '/' + name;
-
-            if (componentConfig.htmlOnly) {
-                requirePath = 'text!' + requirePath + '.html';
-            } else {
-                requirePath = requirePath + '-ui';
-            }
-
-            var koComponentConfig = {
-                require: requirePath
-            };
-
-            if (componentConfig.htmlOnly) {
-                koComponentConfig = {
-                    template: koComponentConfig
-                };
-            }
-
-            ko.components.register(name, koComponentConfig);
-
-            return koComponentConfig;
-        };
-
         //todo: remove when this https://github.com/knockout/knockout/issues/1475
         KocoUtilities.prototype.koBindingDone = function(element, childElementCount, attempts, includeComments) {
             return new $.Deferred(function(dfd) {
