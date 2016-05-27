@@ -1,62 +1,76 @@
-'use strict';
+(function (global, factory) {
+    if (typeof define === "function" && define.amd) {
+        define(['exports', 'knockout', 'jquery'], factory);
+    } else if (typeof exports !== "undefined") {
+        factory(exports, require('knockout'), require('jquery'));
+    } else {
+        var mod = {
+            exports: {}
+        };
+        factory(mod.exports, global.knockout, global.jquery);
+        global.knockoutUtilities = mod.exports;
+    }
+})(this, function (exports, _knockout, _jquery) {
+    'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
 
-var _knockout = require('knockout');
+    var _knockout2 = _interopRequireDefault(_knockout);
 
-var _knockout2 = _interopRequireDefault(_knockout);
+    var _jquery2 = _interopRequireDefault(_jquery);
 
-var _jquery = require('jquery');
+    function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : {
+            default: obj
+        };
+    }
 
-var _jquery2 = _interopRequireDefault(_jquery);
+    // Copyright (c) CBC/Radio-Canada. All rights reserved.
+    // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+    function KocoUtilities() {}
 
-// Copyright (c) CBC/Radio-Canada. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+    //todo: remove when this https://github.com/knockout/knockout/issues/1475
+    KocoUtilities.prototype.koBindingDone = function (element, childElementCount, attempts, includeComments) {
+        return new _jquery2.default.Deferred(function (dfd) {
+            try {
+                if (!attempts) {
+                    attempts = 400; //default
+                }
 
-function KocoUtilities() {}
-
-//todo: remove when this https://github.com/knockout/knockout/issues/1475
-KocoUtilities.prototype.koBindingDone = function (element, childElementCount, attempts, includeComments) {
-    return new _jquery2.default.Deferred(function (dfd) {
-        try {
-            if (!attempts) {
-                attempts = 400; //default
+                koBindingDoneTest(1, element, dfd, childElementCount, attempts, includeComments);
+            } catch (err) {
+                dfd.reject(err);
             }
+        }).promise();
+    };
 
-            koBindingDoneTest(1, element, dfd, childElementCount, attempts, includeComments);
-        } catch (err) {
-            dfd.reject(err);
+    //todo: remove when this https://github.com/knockout/knockout/issues/1475
+    function koBindingDoneTest(attempt, element, dfd, childElementCount, attempts, includeComments) {
+        if (attempt >= attempts) {
+            dfd.reject('koBindingDone timeout after ' + attempts + ' attempts.');
+            return;
         }
-    }).promise();
-};
 
-//todo: remove when this https://github.com/knockout/knockout/issues/1475
-function koBindingDoneTest(attempt, element, dfd, childElementCount, attempts, includeComments) {
-    if (attempt >= attempts) {
-        dfd.reject('koBindingDone timeout after ' + attempts + ' attempts.');
-        return;
+        // console.info('attempt', attempt, element.childElementCount);
+
+        var bindingDone = includeComments ? element.get(0).childNodes.length > 0 : element.childElementCount > 0;
+
+        if (childElementCount) {
+            bindingDone = includeComments ? element.get(0).childNodes.length === childElementCount : element.childElementCount === childElementCount;
+        }
+
+        if (bindingDone) {
+            dfd.resolve(element);
+            return;
+        }
+
+        setTimeout(function () {
+            koBindingDoneTest(attempt + 1, element, dfd, childElementCount, attempts, includeComments);
+        }, 1);
     }
 
-    // console.info('attempt', attempt, element.childElementCount);
-
-    var bindingDone = includeComments ? element.get(0).childNodes.length > 0 : element.childElementCount > 0;
-
-    if (childElementCount) {
-        bindingDone = includeComments ? element.get(0).childNodes.length === childElementCount : element.childElementCount === childElementCount;
-    }
-
-    if (bindingDone) {
-        dfd.resolve(element);
-        return;
-    }
-
-    setTimeout(function () {
-        koBindingDoneTest(attempt + 1, element, dfd, childElementCount, attempts, includeComments);
-    }, 1);
-}
-
-exports.default = new KocoUtilities();
+    exports.default = new KocoUtilities();
+});
