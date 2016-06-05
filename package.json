@@ -11,7 +11,6 @@
     "build": "rm -rf dist && mkdir dist && cp -r src/* dist && rm -rf dist/*.js && babel src --out-dir dist --presets es2015,stage-0 --plugins transform-es2015-modules-umd"
   },
   "dependencies": {
-    "jquery": "^2.1.4",
     "knockout": "^3.4.0"
   },
   "devDependencies": {
